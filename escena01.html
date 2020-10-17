@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!--
+
+        En esta escena se trabajan los siguientes requisitos del enunciado:
+
+        - Entorno predefinido
+        - Importación de objetos externos, uno de ellos (la bailarina) con animación y creación dinámica mediante código
+        - Interacción con objetos: haciendo clic sobre la radio, la bailarina aparece y desaparece.
+
+        Además, se ha trabajado lo siguiente:
+
+        - Audio
+        - Iluminación
+        - Lanzamiento de animaciones embebidas en un modelo gltf
+    -->
+    <meta charset="utf-8" />
+    <title>Realidad Virtual - PEC1 - Escena nocturna</title>
+    <!--Aframe versión 7. La 8.0 no es 100% compatible con el generador de entornos (https://github.com/feiss/aframe-environment-component/issues/39) -->
+    <script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script>
+    <!--Componente para generación de entornos.-->
+    <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
+    <!--Varios componentes. Necesario para importar objetos fbx y reproducir las animaciones embebidas en ellos (https://aframe.io/docs/0.7.0/introduction/models.html)-->
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.2.0/dist/aframe-extras.min.js"></script>
+
+    <script>
+        /*Para manejar correctamente los eventos click en modelos externos. Tomado de https://github.com/aframevr/aframe/issues/3067*/
+        AFRAME.registerComponent('raycaster-refresh', {
+            init: function () {
+                var sceneEl = this.el.sceneEl;
+                sceneEl.addEventListener('object3dset', function () {
+                    var raycasterEl = sceneEl.querySelector('[raycaster]');
+                    raycasterEl.components.raycaster.refreshObjects();
+                });
+            }
+        });
+        /*Manejador de eventos click para el modelo de la radio*/
+        AFRAME.registerComponent('handle-events', {
+            init: function () {
+                var el = this.el;
+                var playing = false; //Variable para controlar si se está reproduciendo el clip de audio
+
+                el.addEventListener('click', function () {
+                    var sonido = document.querySelector('#sonido');
+                    var song = sonido.components.sound;
+                    var bailarina = document.querySelector('#bailarina');
+
+                    if (playing) {
+                        //Si está sonando la canción y la bailarina está en escena, la eliminamos.
+                        //Hemos registrado previamente un componente para configurar el modelo fbx: lo eliminamos también.
+                        if (bailarina != null) {
+                            bailarina.parentNode.removeChild(bailarina);
+                            delete AFRAME.components['configure-puppet'];
+                        }
+                        //Pausamos y rebobinamos la canción
+                        song.pause();
+                        song.currentTime = 0;
+                    }
+                    else {
+                        if (bailarina == null) {
+                            //Aquí vamos a añadir un modelo externo complejo con animaciones generado con Adobe Fuse.
+                            //Rig y animación con mixamo.com. Conversión dae binario a gltf con Blender.
+                            //El gltf se ha modificado con Visual Studio Code para añadir la extensión KHR_materials_pbrSpecularGlossiness,
+                            //que los exportadores a gltf disponibles en Blender no manejan por defecto.
+                            //Ver https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_pbrSpecularGlossiness
+                            //y también https://github.com/KhronosGroup/glTF/tree/master/specification/2.0
+                            var sceneE1 = document.querySelector('a-scene');
+                            //Este componente es necesario, porque no podemos configurar propiedades antes
+                            //de que se cargue completamente el modelo (ver https://aframe.io/docs/0.7.0/introduction/javascript-events-dom-apis.html#adding-an-entity-with-appendchild)
+                            AFRAME.registerComponent('configure-puppet', {
+                                init: function () {
+                                    entityE1.setAttribute('position', { x: 0, y: 0, z: -3.571 });
+                                    entityE1.setAttribute('gltf-model', "recursos/modelos/bailarina/bailarina.gltf");
+                                    entityE1.setAttribute('scale', { x: 2, y: 2, z: 2 });
+                                    //El modelo proyecta sombras, pero no las recibe. La luz de tipo spot genera aparatos con receive:true y
+                                    //y en esta escena no aporta demasiado valor, además de que ya existe cierto baking de sombras en las propias texturas del gltf
+                                    entityE1.setAttribute('shadow', { cast: true, receive: false });
+                                    entityE1.setAttribute('animation-mixer', { clip: "*" });
+                                    entityE1.setAttribute('id', "bailarina");
+                                }
+                            });
+
+                            var entityE1 = document.createElement('a-entity');
+                            entityE1.setAttribute('configure-puppet', '');
+                            sceneE1.appendChild(entityE1);
+                        }
+
+                        song.playSound();
+                    }
+                    playing = !playing;
+                });
+            }
+        });
+
+        /*Ver explicación en escena inicial*/
+        AFRAME.registerComponent("move", {
+            schema: {
+                target: { type: "selector" },
+                position: { type: "string" }
+            },
+            init: function () {
+                this.el.addEventListener("mouseenter", function () {
+                    var animation = document.createElement("a-animation");
+                    animation.setAttribute("attribute", "position");
+                    animation.setAttribute("to", this.data.position);
+                    animation.setAttribute("dur", "1000");
+                    animation.setAttribute("repeat", "0");
+                    this.data.target.appendChild(animation);
+                }.bind(this));
+            }
+
+        });
+    </script>
+</head>
+<body>
+    <a-scene environment="preset: starry; ground: hills; groundYScale: 5.9; shadow: true" fog="density: 20; color: #6b97a3; far: 30" raycaster-refresh>
+        <a-assets>
+            <a-asset-item id="modelo-radio" src="recursos/modelos/radio/model.dae"></a-asset-item>
+            <audio id="mp3-cancion" src="recursos/audio/casimps1_-_Just_You_Wait.mp3"></audio>
+            <img id="contact" src="recursos/img/screenshot-escena_inicial.png" />
+        </a-assets>
+        <a-entity>
+            <a-camera id="camera">
+                <a-cursor color="#66ffff"></a-cursor>
+            </a-camera>
+        </a-entity>
+        <!--Luz adicional, dado que hemos elegido un entorno oscuro, para simular un foco sobre el modelo fbx que cargamos mediante código.
+    El valor por defecto de los mapas de sombra (512) pixela un poco, pero lo mantenemos por motivos de rendimiento. -->
+        <a-entity position="0 4.127 4.276" light="penumbra:0.53;target:#bailarina;castShadow:true;type:spot;angle: 37" id="foco"></a-entity>
+        <a-collada-model src="#modelo-radio" position="0.649 0 -10.198" rotation="0 53 0" scale="3 3 3" shadow="cast: true; receive: true" id="radio" handle-events>
+            <!--Licencia: cc-by-nc - Just you wait - Clarence Simpson - ccmixter.org-->
+            <a-sound src="#mp3-cancion" loop=true volume=4 autoplay=false id="sonido"></a-sound>
+        </a-collada-model>
+        <!--Recuperamos la idea del portal, que situamos detrás de la cámara, para que no distraiga la atención de la idea principal de la escena.
+            De esta manera, no nos quedamos "atrapados" en la segunda escena. -->
+        <a-link id="portal " class="link" image="#contact" href="escena00.html" title="Escena inicial" position="0 1.601 8"
+            geometry="primitive:circle; radius:2 ; segments:64"
+            color="black" move="target:#camera;position:0 1.601 5">
+        <a-animation attribute="scale" begin="mouseenter" dur="300" to="2 2 2"></a-animation>
+        <a-animation attribute="scale" begin="mouseleave" dur="300" to="1 1 1"></a-animation>
+        </a-link>  
+    </a-scene>
+</body>
+</html>

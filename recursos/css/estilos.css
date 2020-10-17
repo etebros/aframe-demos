@@ -1,0 +1,50 @@
+﻿body {
+    background-color: black;
+}
+
+#pagina {
+    width: 95%;
+    margin-left: auto;
+    margin-right:auto;
+}
+
+#header {
+    height: 40px;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: lightgreen;
+    font: 1.2rem roboto, arial, sans-serif;
+}
+
+/*Para que la escena ocupe siempre un área
+  significativa, utilizamos unidaes relativas
+  a las dimensiones del viewport
+*/
+#vr1 {
+    width: 95vw;
+    height: 80vh;
+}
+
+#progreso {
+    background-color: black;
+    width:20vw;
+    height:20vw;
+    top:45%;
+    left:40%;
+    z-index:99999;
+    position:absolute;
+    display:block;
+}
+
+#footer {
+    margin-top: 1rem;
+    margin-bottom: 1 rem;
+}
+
+p {
+    text-align: center;
+    color: lightgreen;
+    font-family: roboto, arial, sans-serif;
+}
+
+

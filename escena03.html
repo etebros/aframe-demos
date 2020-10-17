@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Realidad Virtual - PEC3 - Escena 360</title>
+    <!--Aframe versión 8.-->
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="texturaOxid" src="recursos/img/oxid.png">
+            <!--video id="cubsVideo" autoplay loop="true" src="cubsVideo.mp4"-->
+            <video id="cubsVideo" autoplay loop="true" src="recursos/img/Video3600000.mp4">
+        </a-assets>
+        <a-videosphere radius="5" src="#cubsVideo"></a-videosphere>
+
+        <a-box position="-8 1 -2" rotation="0 30 45" scale="2 2 2" src="#texturaOxid">
+            <a-animation attribute="position" direction="alternate" dur="2000" repeat="indefinite" to="-8 1 -3"></a-animation>
+            <a-animation scale="rotation" begin="mouseenter" dur="300" to="360 45 45"></a-animation>
+        </a-box>
+
+        <a-camera>
+            <a-cursor color="#ff66ff"></a-cursor>
+        </a-camera>
+    </a-scene>
+</body>
+</html>
