@@ -72,7 +72,7 @@
         <!--<a-box color="#EF2D5E" position="0 1 -4" handle-events></a-box>-->
         <!--Proporcionamos un texto con instrucciones para saber qué hacer en la siguiente escena. Aquí, trabajamos
             las geometrías asociadas a textos y los materiales-->
-        <a-text value="¡Entre en la escena nocturna y encienda la radio!" color="#478d54" position="0 0.2 -3" align="center" width="5"
+        <a-text value="Go through circular portal and turn on radio!" color="#478d54" position="0 0.2 -3" align="center" width="5"
                 material="color: black; opacity: 0.3"
                 shadow="receive:false"
                 geometry="primitive: plane; height: auto; width: auto">
@@ -92,7 +92,7 @@
             Utilizamos dos sistemas de animación: el primero, es el declarativo, que une una animación a un evento concreto; 
             el segundo, lo realiza el componente move, que registra una animación en resupuesta al evente mouseenter.
             -->
-        <a-link id="portal "class="link" image="#starry" href="escena01.html" title="Escena nocturna" color="#478d54" position="5 1.601 -13.345"
+        <a-link id="portal "class="link" image="#starry" href="escena01.html" title="Night scene" color="#478d54" position="5 1.601 -13.345"
                 geometry="primitive:circle; radius:7 ; segments:64"
                 material="#starry;shader:portal;side:double" move="target: #camera; position: 3.5 1.601 -10">
             <a-animation attribute="scale" begin="mouseenter" dur="300" to="2 2 2"></a-animation>
