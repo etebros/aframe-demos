@@ -11626,34 +11626,34 @@
     </library_effects>
     <library_images>
         <image id="ID6">
-            <init_from>__CorrogateShiny_.jpg</init_from>
+            <init_from>CorrogateShiny_.jpg</init_from>
         </image>
         <image id="ID19">
-            <init_from>__CorrogateShiny_2.jpg</init_from>
+            <init_from>CorrogateShiny_2.jpg</init_from>
         </image>
         <image id="ID78">
-            <init_from>__CorrogateShiny_1.jpg</init_from>
+            <init_from>CorrogateShiny_1.jpg</init_from>
         </image>
         <image id="ID107">
-            <init_from>__Concrete_.jpg</init_from>
+            <init_from>Concrete_.jpg</init_from>
         </image>
         <image id="ID280">
-            <init_from>__Glass_Sky_Reflection_.jpg</init_from>
+            <init_from>Glass_Sky_Reflection_.jpg</init_from>
         </image>
         <image id="ID333">
             <init_from>Material3.jpg</init_from>
         </image>
         <image id="ID474">
-            <init_from>__Metal-floor_.jpg</init_from>
+            <init_from>Metal-floor_.jpg</init_from>
         </image>
         <image id="ID1189">
-            <init_from>__CorrogateShiny_1_0.jpg</init_from>
+            <init_from>CorrogateShiny_1_0.jpg</init_from>
         </image>
         <image id="ID1434">
             <init_from>Metal_Panel.jpg</init_from>
         </image>
         <image id="ID1752">
-            <init_from>__Terrazzo_.jpg</init_from>
+            <init_from>Terrazzo_.jpg</init_from>
         </image>
     </library_images>
     <scene>
